@@ -189,9 +189,31 @@ class Executor:
         except Exception as e:
             return {"success": False, "error": str(e)}
     
-    def open_url(self, url: str) -> Dict[str, Any]:
-        """Open a URL in the default browser."""
+    def open_url(self, url: str, browser: Optional[str] = None) -> Dict[str, Any]:
+        """Open a URL in the specified browser or default browser."""
         try:
+            # If YouTube URL and no browser specified, use Brave
+            if "youtube.com" in url or "youtu.be" in url:
+                if not browser:
+                    browser = "brave"
+            
+            if browser:
+                # Try to open in specific browser
+                normalized_browser = self._normalize_app_name(browser)
+                if normalized_browser in self.app_paths:
+                    browser_path = self.app_paths[normalized_browser]
+                    if self.system == "Windows":
+                        subprocess.Popen([browser_path, url], shell=False)
+                    elif self.system == "Darwin":  # macOS
+                        subprocess.Popen(["open", "-a", browser_path, url])
+                    else:  # Linux
+                        subprocess.Popen([browser_path, url])
+                    return {"success": True, "message": f"Opened {url} in {browser}"}
+                else:
+                    # Browser not found, fall back to default
+                    pass
+            
+            # Default browser opening
             if self.system == "Windows":
                 os.startfile(url)
             elif self.system == "Darwin":  # macOS
