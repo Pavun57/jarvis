@@ -1,0 +1,11 @@
+google-generativeai>=0.8.2
+sqlmodel>=0.0.16
+psycopg2-binary>=2.9.9
+chromadb>=0.4.22
+duckduckgo-search>=6.1.12
+pydantic-settings>=2.1.0
+python-dotenv>=1.0.1
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+websockets>=12.0
+
